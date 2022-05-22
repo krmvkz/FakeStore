@@ -12,6 +12,7 @@ final class HomeCollectionViewCell: UICollectionViewCell {
     // MARK: - Static Properties
     static let identifier = "HomeCollectionViewCell"
     
+    // MARK: - UI Init
     lazy var imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit

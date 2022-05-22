@@ -8,6 +8,7 @@
 import Foundation
 import Alamofire
 
+// MARK: - Constants
 private struct Constants {
     static let baseURL = "https://fakestoreapi.com/products"
 }
@@ -17,7 +18,11 @@ struct APIService {
     // MARK: - Shared instance
     static let shared = APIService()
     
-    // MARK: - Methods
+}
+
+// MARK: - Methods
+extension APIService {
+    
     func fetchCategories(completion: @escaping ([String]?, Error?) -> Void) {
         let url = Constants.baseURL + "/categories"
         AF.request(url, method: .get).responseDecodable(of: [String].self) { response in

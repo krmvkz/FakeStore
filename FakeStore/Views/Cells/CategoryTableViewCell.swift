@@ -14,6 +14,7 @@ final class CategoryTableViewCell: UITableViewCell {
     // MARK: - Static Properties
     static let identifier = "CategoryTableViewCell"
     
+    // MARK: - UI Init
     lazy var wrapView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false

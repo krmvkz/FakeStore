@@ -5,20 +5,22 @@
 //  Created by Arman Karimov on 17.05.2022.
 //
 
-import Foundation
+import CoreData
 
-class FavouritesViewModel {
+struct FavouritesViewModel {
     
     var favoutite: Favourite?
+
+}
+
+// MARK: - Methods
+extension FavouritesViewModel {
     
     func addToFavourites() {
-//        Favourite.addToItems
     }
     
     func loadFavourites() {
-        CoreDataManager.shared.load {
-//            Favourite.fetchRequest()
-        }
+        
     }
     
 }

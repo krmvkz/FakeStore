@@ -12,7 +12,7 @@ protocol ItemViewModelDelegate: AnyObject {
     func didFinishFetchingItem(with result: Result<Product, Error>)
 }
 
-final class ItemViewModel {
+struct ItemViewModel {
     
     // MARK: - Delegate
     var delegate: ItemViewModelDelegate?
@@ -24,7 +24,7 @@ extension ItemViewModel {
     
     func getProduct(by id: Int) {
         delegate?.didStarFetchingItem()
-        APIService.shared.fetchProduct(by: id) { [unowned self] item, error in
+        APIService.shared.fetchProduct(by: id) { [self] item, error in
             if let error = error {
                 delegate?.didFinishFetchingItem(with: .failure(error))
             }

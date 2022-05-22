@@ -97,6 +97,7 @@ extension CatalogueViewController: UITableViewDataSource {
     
 }
 
+// MARK: UITableViewDelegate
 extension CatalogueViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {

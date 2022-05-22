@@ -25,6 +25,11 @@ class CoreDataManager {
         persistentContainer = NSPersistentContainer(name: modelName)
     }
     
+}
+
+// MARK: - Methods
+extension CoreDataManager {
+    
     func load(completion: (() -> Void)? = nil) {
         persistentContainer.loadPersistentStores { description, error in
             guard error == nil else {

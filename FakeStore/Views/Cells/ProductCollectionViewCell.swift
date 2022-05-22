@@ -15,6 +15,7 @@ final class ProductCollectionViewCell: UICollectionViewCell {
     // MARK: - Static Properties
     static let identifier = "ProductCollectionViewCell"
     
+    // MARK: - UI Init
     lazy var imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -40,7 +41,6 @@ final class ProductCollectionViewCell: UICollectionViewCell {
         contentView.addSubview(imageView)
         self.dropShadow()
     }
-    let someString = ""
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -61,6 +61,7 @@ final class ProductCollectionViewCell: UICollectionViewCell {
     
 }
 
+// MARK: - Methods
 extension ProductCollectionViewCell {
     
     func setupCell(with product: Product) {
