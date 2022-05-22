@@ -1,0 +1,12 @@
+{
+  "images" : [
+    {
+      "filename" : "home-ci1.jpg",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}
