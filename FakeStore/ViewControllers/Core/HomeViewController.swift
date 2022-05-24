@@ -15,14 +15,6 @@ final class HomeViewController: UIViewController {
     let spinnerVM = SpinnerViewModel()
     
     // MARK: - Properties
-    var counter = 1
-    var timer = Timer()
-    private var collectionContent: [UIImage? : String] = [
-        UIImage(named: "home-ci1") : "Sale is Live, Go get your product",
-        UIImage(named: "home-ci2") : "Shop right now",
-        UIImage(named: "home-ci3") : "Wanna shop?"
-    ]
-    
     private var homeCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
@@ -52,12 +44,12 @@ final class HomeViewController: UIViewController {
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        startTimerForAutoScroll()
+        homeVM.startTimerForAutoScroll(collectionView: homeCollectionView)
     }
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        timer.invalidate()
+        homeVM.stopTimer()
     }
     
 }
@@ -76,25 +68,10 @@ private extension HomeViewController {
     }
     
     func setupView() {
-        view.translatesAutoresizingMaskIntoConstraints = false
+        homeCollectionView.translatesAutoresizingMaskIntoConstraints = false
         homeCollectionView.snp.makeConstraints { make in
             make.leading.trailing.top.equalTo(self.view.safeAreaLayoutGuide)
             make.height.equalTo(self.view.width * (3/4))
-        }
-    }
-    
-    func startTimerForAutoScroll() {
-         timer = Timer.scheduledTimer(timeInterval: 3.0, target: self, selector: #selector(autoScroll), userInfo: nil, repeats: true)
-    }
-    
-    @objc func autoScroll() {
-        if self.counter < self.collectionContent.count {
-          let indexPath = IndexPath(item: counter, section: 0)
-          self.homeCollectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
-          self.counter += 1
-        } else {
-          self.counter = 1
-          self.homeCollectionView.scrollToItem(at: IndexPath(item: 0, section: 0), at: .centeredHorizontally, animated: true)
         }
     }
     
@@ -102,20 +79,18 @@ private extension HomeViewController {
 
 extension HomeViewController: UICollectionViewDataSource {
 
-    // TODO: Change from mock data
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return collectionContent.count
+        return homeVM.numberOfItemsInSection
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: HomeCollectionViewCell.identifier, for: indexPath) as? HomeCollectionViewCell else {
             return UICollectionViewCell()
         }
-        let arr = Array(collectionContent)[indexPath.row]
+        let arr = homeVM.collectionContent[indexPath.row]
         let image = arr.key
         let content = arr.value
         cell.setupCell(with: image ?? UIImage(), content: content)
-//        cell.backgroundColor = .red
         return cell
     }
     
@@ -124,16 +99,11 @@ extension HomeViewController: UICollectionViewDataSource {
 extension HomeViewController: UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let width = (collectionView.frame.width)
-        let height = width * (3/4)
-        let size = CGSize(width: width, height: height)
-        return size
+        return homeVM.sizeForItemAt(collectionView)
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let vc = CatalogueViewController()
-//        self.navigationController?.show(vc, sender: nil)
-        self.navigationController?.pushViewController(vc, animated: true)
+        homeVM.showCatalogue(from: self)
     }
     
 }
