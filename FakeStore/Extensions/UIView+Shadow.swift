@@ -15,7 +15,7 @@ extension UIView {
         layer.shadowColor = UIColor.systemBackground.inverted.cgColor
         layer.shadowOpacity = 0.25
         layer.shadowOffset = CGSize(width: 0, height: 0)
-        layer.shadowRadius = 4
+        layer.shadowRadius = 2
     }
     
 }

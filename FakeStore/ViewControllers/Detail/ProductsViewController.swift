@@ -28,6 +28,7 @@ class ProductsViewController: UIViewController {
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.showsVerticalScrollIndicator = false
         collectionView.register(ProductCollectionViewCell.self, forCellWithReuseIdentifier: ProductCollectionViewCell.identifier)
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
         return collectionView
     }()
     
@@ -49,6 +50,7 @@ class ProductsViewController: UIViewController {
 private extension ProductsViewController {
     
     func initialSetup() {
+        title = "\(categoryName)".capitalized
         view.backgroundColor = .systemBackground
         view.addSubview(productsCollectionView)
         
@@ -57,11 +59,9 @@ private extension ProductsViewController {
     
     func setupView() {
         productsCollectionView.snp.makeConstraints { make in
-            make.edges.equalTo(view.safeAreaLayoutGuide)
-            make.top.bottom.equalTo(self.view.safeAreaLayoutGuide)
-            make.leading.trailing.equalTo(self.view).inset(10)
+            make.top.bottom.equalTo(view.safeAreaLayoutGuide)
+            make.leading.trailing.equalTo(view).inset(10)
         }
-        productsCollectionView.reloadData()
     }
     
     func setupProtocolConformance() {
@@ -106,10 +106,14 @@ extension ProductsViewController: UICollectionViewDelegateFlowLayout {
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-        return 5
+        return 10
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
+        return CGSize(width: collectionView.width, height: 5)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
         return CGSize(width: collectionView.width, height: 5)
     }
     

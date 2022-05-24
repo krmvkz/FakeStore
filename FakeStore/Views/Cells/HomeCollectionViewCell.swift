@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SnapKit
 
 final class HomeCollectionViewCell: UICollectionViewCell {
     
@@ -15,7 +16,7 @@ final class HomeCollectionViewCell: UICollectionViewCell {
     // MARK: - UI Init
     lazy var imageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.contentMode = .scaleAspectFit
+        imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
         return imageView
     }()
@@ -39,20 +40,23 @@ final class HomeCollectionViewCell: UICollectionViewCell {
     // MARK: - Lifecycle
     override func layoutSubviews() {
         super.layoutSubviews()
-        self.translatesAutoresizingMaskIntoConstraints = false
-        contentLabel.frame = CGRect(x: 10,
-                                    y: contentView.height-50,
-                                    width: contentView.width-20,
-                                    height: 50)
-        imageView.frame = CGRect(x: 0,
-                                 y: 0,
-                                 width: contentView.width,
-                                 height: contentView.height-50)
-        
+        imageView.snp.makeConstraints { make in
+            make.top.equalTo(contentView)
+            make.width.equalTo(contentView.width-20)
+            make.height.equalTo(contentView.height-50)
+            make.centerX.equalTo(contentView)
+        }
+        contentLabel.snp.makeConstraints { make in
+            make.bottom.equalTo(contentView)
+            make.height.equalTo(50)
+            make.width.equalTo(contentView.width-20)
+            make.centerX.equalTo(contentView)
+        }
     }
     
 }
 
+// MARK: - Methods
 extension HomeCollectionViewCell {
     
     func setupCell(with image: UIImage, content: String) {

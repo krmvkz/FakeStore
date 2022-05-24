@@ -51,7 +51,11 @@ final class CatalogueViewController: UIViewController {
 extension CatalogueViewController {
     
     func initialSetup() {
+        title = "Catalogue"
+        navigationItem.backButtonTitle = ""
+        navigationController?.navigationBar.tintColor = .systemBackground.inverted
         view.backgroundColor = .systemBackground
+        
         view.addSubview(categoriesTableView)
         catalogueVM.getAllCategories()
     }

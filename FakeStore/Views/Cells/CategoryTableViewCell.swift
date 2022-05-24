@@ -63,12 +63,11 @@ extension CategoryTableViewCell {
         }
         categoryNameLabel.snp.makeConstraints { make in
             make.edges.equalTo(wrapView).inset(5)
-            make.height.equalTo(50)
         }
     }
     
     func setupCell(_ name: String) {
-        categoryNameLabel.text = name
+        categoryNameLabel.text = name.capitalized
     }
     
 }

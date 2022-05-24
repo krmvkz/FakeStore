@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SnapKit
 import Kingfisher
 
 class ItemViewController: UIViewController {
@@ -18,12 +19,14 @@ class ItemViewController: UIViewController {
     var id: Int = 0
     lazy var imageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.clipsToBounds = true
+        imageView.contentMode = .scaleAspectFill
+        imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
     lazy var titleLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 17, weight: .bold)
+        label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
@@ -35,6 +38,7 @@ class ItemViewController: UIViewController {
     }
     
     override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
         setupView()
     }
 
@@ -44,7 +48,9 @@ class ItemViewController: UIViewController {
 private extension ItemViewController {
     
     func initialSetup() {
-        view.backgroundColor = .systemBackground
+        view.backgroundColor = .yellow
+        view.addSubview(imageView)
+        view.addSubview(titleLabel)
         itemVM.getProduct(by: id)
     }
     
@@ -53,7 +59,16 @@ private extension ItemViewController {
     }
     
     func setupView() {
-    // TODO: - add constraints
+        imageView.snp.makeConstraints { make in
+            make.top.equalTo(view.safeAreaLayoutGuide)
+            make.leading.trailing.equalTo(view)
+            make.height.equalTo(view.width * 0.3)
+        }
+        titleLabel.snp.makeConstraints { make in
+            make.firstBaseline.equalTo(imageView.snp.lastBaseline)
+            make.leading.trailing.equalTo(view)
+            make.height.equalTo(50)
+        }
     }
     
     func updateView(with model: Product) {
@@ -66,7 +81,7 @@ private extension ItemViewController {
 // MARK: ItemViewModelDelegate
 extension ItemViewController: ItemViewModelDelegate {
     
-    func didStarFetchingItem() {
+    func didStartFetchingItem() {
         spinnerVM.createSpinnerView(in: self)
     }
     
@@ -83,3 +98,16 @@ extension ItemViewController: ItemViewModelDelegate {
     }
     
 }
+
+// MARK: - Preview Extension
+#if DEBUG
+import SwiftUI
+
+@available(iOS 13, *)
+struct ItemVC: PreviewProvider {
+
+    static var previews: some View {
+        ItemViewController().toPreview()
+    }
+}
+#endif

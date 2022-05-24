@@ -8,7 +8,7 @@
 import Foundation
 
 protocol ItemViewModelDelegate: AnyObject {
-    func didStarFetchingItem()
+    func didStartFetchingItem()
     func didFinishFetchingItem(with result: Result<Product, Error>)
 }
 
@@ -23,7 +23,7 @@ struct ItemViewModel {
 extension ItemViewModel {
     
     func getProduct(by id: Int) {
-        delegate?.didStarFetchingItem()
+        delegate?.didStartFetchingItem()
         APIService.shared.fetchProduct(by: id) { [self] item, error in
             if let error = error {
                 delegate?.didFinishFetchingItem(with: .failure(error))

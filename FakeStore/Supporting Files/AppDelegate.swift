@@ -19,6 +19,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         CoreDataManager.shared.load()
         return true
     }
+    
+    func application(_ application: UIApplication, supportedInterfaceOrientationsFor window: UIWindow?) -> UIInterfaceOrientationMask {
+        let restrictOrientation: UIInterfaceOrientationMask = .portrait
+        return restrictOrientation
+    }
 
     // MARK: UISceneSession Lifecycle
 

@@ -58,6 +58,9 @@ final class HomeViewController: UIViewController {
 private extension HomeViewController {
     
     func initialSetup() {
+        title = "Home"
+        navigationItem.backButtonTitle = ""
+        navigationController?.navigationBar.tintColor = .systemBackground.inverted
         view.backgroundColor = .systemBackground
         view.addSubview(homeCollectionView)
     }
@@ -68,7 +71,6 @@ private extension HomeViewController {
     }
     
     func setupView() {
-        homeCollectionView.translatesAutoresizingMaskIntoConstraints = false
         homeCollectionView.snp.makeConstraints { make in
             make.leading.trailing.top.equalTo(self.view.safeAreaLayoutGuide)
             make.height.equalTo(self.view.width * (3/4))

@@ -21,7 +21,7 @@ final class ProductCollectionViewCell: UICollectionViewCell {
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFit
         imageView.clipsToBounds = true
-        imageView.backgroundColor = .white
+        imageView.backgroundColor = .systemBackground
         return imageView
     }()
     lazy var titleLabel: UILabel = {
