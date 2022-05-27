@@ -9,7 +9,7 @@ import CoreData
 
 struct FavouritesViewModel {
     
-    var favoutite: Favourite?
+//    var favoutite: Favourite?
 
 }
 

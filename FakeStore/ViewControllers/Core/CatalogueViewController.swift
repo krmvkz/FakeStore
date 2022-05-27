@@ -44,6 +44,17 @@ final class CatalogueViewController: UIViewController {
         super.viewDidLayoutSubviews()
         setupView()
     }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        updateUI()
+    }
+    
+    func updateUI() {
+        DispatchQueue.main.async {
+            // some ui update logic
+        }
+    }
 
 }
 

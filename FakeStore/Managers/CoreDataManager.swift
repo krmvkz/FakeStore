@@ -8,22 +8,32 @@
 import UIKit
 import CoreData
 
-class CoreDataManager {
+private struct Constants {
+    static let entityName: String = "CartItem"
+}
+
+final class CoreDataManager {
     
     // MARK: - Shared instance
-    static let shared = CoreDataManager(modelName: "FakeStore")
+    static let shared = CoreDataManager()
     
     // MARK: - Properties
-    var persistentContainer: NSPersistentContainer
-    var viewContext: NSManagedObjectContext {
-        return persistentContainer.viewContext
-    }
     
+    lazy var persistentContainer: NSPersistentContainer = {
+        let persistentContainer = NSPersistentContainer(name: "FakeStore")
+        persistentContainer.loadPersistentStores { storeDescription, error in
+            if let error = error as NSError? {
+                fatalError("Unresolved \(error), \(error.userInfo)")
+            }
+        }
+        return persistentContainer
+    }()
+    lazy var viewContext: NSManagedObjectContext = {
+        return persistentContainer.viewContext
+    }()
+
     // MARK: - Init
-    // TODO: - Refactor code
-    init(modelName: String) {
-        persistentContainer = NSPersistentContainer(name: modelName)
-    }
+    private init() {}
     
 }
 
@@ -33,7 +43,9 @@ extension CoreDataManager {
     func load(completion: (() -> Void)? = nil) {
         persistentContainer.loadPersistentStores { description, error in
             guard error == nil else {
-                fatalError(error!.localizedDescription)
+                print(error!)
+//                fatalError(error!.localizedDescription)
+                return
             }
             completion?()
         }
@@ -47,6 +59,83 @@ extension CoreDataManager {
                 let nserror = error as NSError
                 fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
             }
+        }
+    }
+    
+    func fetchAllCartItem() -> [CartItem]?{
+        let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: Constants.entityName)
+        do {
+            let items = try viewContext.fetch(fetchRequest)
+            return items as? [CartItem]
+        } catch let error as NSError {
+            print("Could not fetch. \(error), \(error.userInfo)")
+            return nil
+        }
+    }
+    
+    func insertToCart(item: CartItemModel) -> CartItem? {
+        let entity = NSEntityDescription.entity(forEntityName: "CartItem",
+                                                in: viewContext)!
+        let cartItem = NSManagedObject(entity: entity,
+                                       insertInto: viewContext)
+        
+        cartItem.setValue(item.category, forKey: "category")
+        cartItem.setValue(item.id, forKeyPath: "id")
+        cartItem.setValue(item.image, forKey: "image")
+        cartItem.setValue(item.price, forKey: "price")
+        cartItem.setValue(item.title, forKeyPath: "title")
+        
+        do {
+            try viewContext.save()
+            return cartItem as? CartItem
+        } catch let error as NSError {
+            print("Could not save. \(error), \(error.userInfo)")
+            return nil
+        }
+    }
+    
+    func updateCart(with item: CartItemModel) {
+        let entity = NSEntityDescription.entity(forEntityName: Constants.entityName,
+                                                in: viewContext)!
+        let cartItem = NSManagedObject(entity: entity,
+                                       insertInto: viewContext)
+        
+        do {
+            cartItem.setValue(item.category, forKey: "category")
+            cartItem.setValue(item.id, forKeyPath: "id")
+            cartItem.setValue(item.image, forKey: "image")
+            cartItem.setValue(item.price, forKey: "price")
+            cartItem.setValue(item.title, forKeyPath: "title")
+            do {
+                try viewContext.save()
+                print("updated!")
+            } catch let error as NSError  {
+                print("Could not save \(error), \(error.userInfo)")
+            } catch {
+                print(error)
+            }
+        } catch {
+            print("Error with request: \(error)")
+        }
+    }
+    
+    func deleteFromCart(id: Int64) -> [CartItem]? {
+        let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: Constants.entityName)
+        fetchRequest.predicate = NSPredicate(format: "id == %@" , id)
+        do {
+            
+            /*managedContext.fetch(fetchRequest) will return array of person objects [personObjects]*/
+            let item = try viewContext.fetch(fetchRequest)
+            var arrRemovedItems = [CartItem]()
+            for i in item {
+                viewContext.delete(i)
+                try viewContext.save()
+                arrRemovedItems.append(i as! CartItem)
+            }
+            return arrRemovedItems
+        } catch let error as NSError {
+            print("Could not fetch. \(error), \(error.userInfo)")
+            return nil
         }
     }
     
