@@ -7,7 +7,7 @@
 
 import UIKit
 
-class HomeViewModel {
+final class HomeViewModel {
     
     // MARK: - Properties
     private var counter = 1
@@ -25,7 +25,7 @@ class HomeViewModel {
     
 }
 
-// MARK: Methods
+// MARK: - Methods
 extension HomeViewModel {
     
     func sizeForItemAt(_ collectionView: UICollectionView) -> CGSize {

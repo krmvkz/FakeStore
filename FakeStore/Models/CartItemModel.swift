@@ -7,12 +7,13 @@
 
 import Foundation
 
+// MARK: - CartItemModel
 struct CartItemModel {
     
-    var category: String?
-    var id: Int64
-    var image: String?
-    var price: Double
-    var title: String?
+    let category: String
+    let id: Int64
+    let image: String
+    let price: Double
+    let title: String
     
 }

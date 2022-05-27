@@ -24,16 +24,15 @@ final class CatalogueViewController: UIViewController {
         tableView.translatesAutoresizingMaskIntoConstraints = false
         return tableView
     }()
-    lazy var refreshControl: UIRefreshControl = {
+    private lazy var refreshControl: UIRefreshControl = {
         let refreshControl = UIRefreshControl()
         refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh")
-        // TODO: - ADD Logic to "Pull to refresh"
         refreshControl.addTarget(self, action: #selector(self.handleRefresh),
                                  for: UIControl.Event.valueChanged)
         return refreshControl
     }()
     
-    // MARK: - Lifecyle
+    // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         setupProtocolConformance()
@@ -45,17 +44,6 @@ final class CatalogueViewController: UIViewController {
         setupView()
     }
     
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        updateUI()
-    }
-    
-    func updateUI() {
-        DispatchQueue.main.async {
-            // some ui update logic
-        }
-    }
-
 }
 
 // MARK: - Private Methods
@@ -89,7 +77,6 @@ extension CatalogueViewController {
     
     @objc func handleRefresh() {
         catalogueVM.getAllCategories()
-        categoriesTableView.refreshControl = .none
     }
     
 }
@@ -147,8 +134,10 @@ extension CatalogueViewController: CatalogueViewModelDelegate {
             self.categories = data
             self.categoriesTableView.reloadData()
             spinnerVM.removeSpinnerView()
+            categoriesTableView.refreshControl = .none
         case .failure(let error):
             spinnerVM.removeSpinnerView()
+            categoriesTableView.refreshControl = .none
             fatalError(error.localizedDescription)
         }
     }

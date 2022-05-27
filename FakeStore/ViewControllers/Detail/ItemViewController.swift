@@ -9,25 +9,46 @@ import UIKit
 import SnapKit
 import Kingfisher
 
-class ItemViewController: UIViewController {
+final class ItemViewController: UIViewController {
     
     // MARK: - ViewModels
     var itemVM = ItemViewModel()
+    var cartVM = CartViewModel()
     var spinnerVM = SpinnerViewModel()
+    var item: Product?
 
     // MARK: - Properties
     var id: Int = 0
     lazy var imageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.contentMode = .scaleAspectFill
+        imageView.contentMode = .scaleAspectFit
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
     lazy var titleLabel: UILabel = {
         let label = UILabel()
-        label.font = .systemFont(ofSize: 17, weight: .bold)
+        label.font = .systemFont(ofSize: 17, weight: .semibold)
+        label.numberOfLines = 0
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
+    }()
+    lazy var priceLabel: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = .systemFont(ofSize: 17, weight: .bold)
+        label.textColor = .label
+        label.textAlignment = .left
+        return label
+    }()
+    lazy var addToCartButton: UIButton = {
+        let btn = UIButton()
+        btn.setTitle("Add to cart", for: .normal)
+        btn.tintColor = .white
+        btn.backgroundColor = .systemPink
+        btn.layer.cornerRadius = 4
+        btn.translatesAutoresizingMaskIntoConstraints = false
+        btn.addTarget(self, action: #selector(pressedAddToCart), for: .touchUpInside)
+        return btn
     }()
     
     // MARK: - Lifecycle
@@ -41,16 +62,18 @@ class ItemViewController: UIViewController {
         super.viewDidLayoutSubviews()
         setupView()
     }
-
+    
 }
 
 // MARK: - Methods
 private extension ItemViewController {
     
     func initialSetup() {
-        view.backgroundColor = .yellow
+        view.backgroundColor = .systemBackground
         view.addSubview(imageView)
         view.addSubview(titleLabel)
+        view.addSubview(priceLabel)
+        view.addSubview(addToCartButton)
         itemVM.getProduct(by: id)
     }
     
@@ -60,13 +83,23 @@ private extension ItemViewController {
     
     func setupView() {
         imageView.snp.makeConstraints { make in
-            make.top.equalTo(view.safeAreaLayoutGuide)
+            make.top.equalTo(view.safeAreaLayoutGuide).inset(20)
             make.leading.trailing.equalTo(view)
-            make.height.equalTo(view.width * 0.3)
+            make.height.equalTo(view.height * 0.5)
         }
         titleLabel.snp.makeConstraints { make in
-            make.firstBaseline.equalTo(imageView.snp.lastBaseline)
-            make.leading.trailing.equalTo(view)
+            make.top.equalTo(imageView.snp.bottom).inset(-10)
+            make.leading.trailing.equalTo(view).inset(10)
+            make.height.equalTo(50)
+        }
+        priceLabel.snp.makeConstraints { make in
+            make.top.equalTo(titleLabel.snp.bottom).inset(-10)
+            make.leading.trailing.equalTo(view).inset(10)
+            make.height.equalTo(25)
+        }
+        addToCartButton.snp.makeConstraints { make in
+            make.bottom.equalTo(view.safeAreaLayoutGuide).inset(40)
+            make.leading.trailing.equalTo(view).inset(40)
             make.height.equalTo(50)
         }
     }
@@ -74,6 +107,17 @@ private extension ItemViewController {
     func updateView(with model: Product) {
         imageView.kf.setImage(with: URL(string: model.image))
         titleLabel.text = model.title
+        priceLabel.text = "\(model.price)$"
+    }
+    
+    @objc func pressedAddToCart(sender: UIButton) {
+        if let item = item {
+            let cartItem: CartItemModel = CartItemModel(category: item.category, id: Int64(item.id), image: item.image, price: item.price, title: item.title)
+            cartVM.save(cartItem: cartItem)
+        }
+        sender.backgroundColor = .systemBlue
+        sender.isEnabled = false
+        sender.setTitle("In the cart", for: .disabled)
     }
     
 }
@@ -89,6 +133,7 @@ extension ItemViewController: ItemViewModelDelegate {
         switch result {
         case .success(let data):
             updateView(with: data)
+            item = data
             spinnerVM.removeSpinnerView()
         case .failure(let error):
             spinnerVM.removeSpinnerView()

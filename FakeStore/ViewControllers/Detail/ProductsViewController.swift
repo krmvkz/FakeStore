@@ -9,7 +9,7 @@ import UIKit
 import SnapKit
 import Kingfisher
 
-class ProductsViewController: UIViewController {
+final class ProductsViewController: UIViewController {
     
     // MARK: - ViewModels
     var productsVM = ProductsViewModel()
@@ -120,7 +120,9 @@ extension ProductsViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let vc = ItemViewController()
         vc.id = products[indexPath.row].id
-        self.navigationController?.pushViewController(vc, animated: true)
+        present(vc, animated: true, completion: nil)
+//        self.navigationController?.show(vc, sender: self)
+//        self.navigationController?.pushViewController(vc, animated: true)
     }
     
 }

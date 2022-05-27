@@ -7,17 +7,27 @@
 
 import CoreData
 
+protocol CartViewModelDelegate: AnyObject {
+    func didFinishFetchingItems()
+}
+
 struct CartViewModel {
     
+    // MARK: - Delegate
+    weak var delegate: CartViewModelDelegate?
+    
+    // MARK: - Properties
     var cartItems: [NSManagedObject] = []
     
 }
 
+// MARK: - Methods
 extension CartViewModel {
     
     mutating func fetchCartItems() {
         do {
             self.cartItems = try CoreDataManager.shared.viewContext.fetch(CartItem.fetchRequest())
+            delegate?.didFinishFetchingItems()
             print(cartItems)
         } catch  {
             print("ERROR: Fetching cart items can't be done")
@@ -45,6 +55,26 @@ extension CartViewModel {
                 return true
             }
         })
+    }
+    
+    func deleteAll() {
+        CoreDataManager.shared.deleteAllFromCart()
+    }
+    
+    func totalPrice() -> Double {
+        var total: Double = 0.0
+        guard let items = cartItems as? [CartItem] else {
+            print("There's no items in cart")
+            return total
+        }
+        for item in items {
+             total += item.price
+        }
+        return total
+    }
+    
+    func totalItems() -> Int {
+        return cartItems.count
     }
     
 }

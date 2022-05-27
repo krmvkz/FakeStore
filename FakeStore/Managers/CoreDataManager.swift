@@ -21,11 +21,6 @@ final class CoreDataManager {
     
     lazy var persistentContainer: NSPersistentContainer = {
         let persistentContainer = NSPersistentContainer(name: "FakeStore")
-        persistentContainer.loadPersistentStores { storeDescription, error in
-            if let error = error as NSError? {
-                fatalError("Unresolved \(error), \(error.userInfo)")
-            }
-        }
         return persistentContainer
     }()
     lazy var viewContext: NSManagedObjectContext = {
@@ -44,7 +39,6 @@ extension CoreDataManager {
         persistentContainer.loadPersistentStores { description, error in
             guard error == nil else {
                 print(error!)
-//                fatalError(error!.localizedDescription)
                 return
             }
             completion?()
@@ -123,8 +117,6 @@ extension CoreDataManager {
         let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: Constants.entityName)
         fetchRequest.predicate = NSPredicate(format: "id == %@" , id)
         do {
-            
-            /*managedContext.fetch(fetchRequest) will return array of person objects [personObjects]*/
             let item = try viewContext.fetch(fetchRequest)
             var arrRemovedItems = [CartItem]()
             for i in item {
@@ -137,6 +129,17 @@ extension CoreDataManager {
             print("Could not fetch. \(error), \(error.userInfo)")
             return nil
         }
+    }
+    
+    func deleteAllFromCart() {
+        let fetchRequest: NSFetchRequest<NSFetchRequestResult> = NSFetchRequest(entityName: Constants.entityName)
+        let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
+        do {
+            try persistentContainer.viewContext.execute(deleteRequest)
+        } catch let error as NSError {
+            print("Could not fetch. \(error), \(error.userInfo)")
+        }
+        print("All items have been deleted")
     }
     
 }
