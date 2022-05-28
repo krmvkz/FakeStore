@@ -131,15 +131,17 @@ extension CoreDataManager {
         }
     }
     
-    func deleteAllFromCart() {
+    func deleteAllFromCart() -> [CartItem]? {
         let fetchRequest: NSFetchRequest<NSFetchRequestResult> = NSFetchRequest(entityName: Constants.entityName)
         let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
         do {
             try persistentContainer.viewContext.execute(deleteRequest)
+            print("All items have been deleted")
+            return fetchAllCartItem()
         } catch let error as NSError {
             print("Could not fetch. \(error), \(error.userInfo)")
+            return nil
         }
-        print("All items have been deleted")
     }
     
 }

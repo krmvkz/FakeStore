@@ -54,8 +54,8 @@ final class CartViewController: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        checkForItems()
         cartVM.fetchCartItems()
+        checkForItems()
     }
     
     override func viewDidLayoutSubviews() {
@@ -104,11 +104,16 @@ private extension CartViewController {
         let alert = UIAlertController(title: "Order", message: message, preferredStyle: UIAlertController.Style.alert)
         
         alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertAction.Style.destructive, handler: nil))
-        alert.addAction(UIAlertAction(title: "Yes", style: UIAlertAction.Style.default, handler: { _ in
-            self.cartVM.deleteAll()
-            DispatchQueue.main.asyncAfter(deadline: .now() + 4, execute: {
-                self.view.setNeedsDisplay()
-            })
+        alert.addAction(UIAlertAction(title: "Yes", style: UIAlertAction.Style.default, handler: { [self] _ in
+            cartVM.deleteAll()
+            DispatchQueue.main.async {
+                checkForItems()
+                cartItemsCollectionView.reloadData()
+            }
+//            DispatchQueue.main.asyncAfter(deadline: .now() + 4, execute: {
+//                self.checkForItems()
+//                self.
+//            })
         }))
         
         self.present(alert, animated: true, completion: nil)

@@ -28,7 +28,6 @@ extension CartViewModel {
         do {
             self.cartItems = try CoreDataManager.shared.viewContext.fetch(CartItem.fetchRequest())
             delegate?.didFinishFetchingItems()
-            print(cartItems)
         } catch  {
             print("ERROR: Fetching cart items can't be done")
         }
@@ -57,8 +56,12 @@ extension CartViewModel {
         })
     }
     
-    func deleteAll() {
-        CoreDataManager.shared.deleteAllFromCart()
+    mutating func deleteAll() {
+        if let items = CoreDataManager.shared.deleteAllFromCart() {
+            self.cartItems = items
+        } else {
+            self.cartItems = []
+        }
     }
     
     func totalPrice() -> Double {
