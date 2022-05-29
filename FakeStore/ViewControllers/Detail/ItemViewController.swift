@@ -118,6 +118,9 @@ private extension ItemViewController {
         sender.backgroundColor = .systemBlue
         sender.isEnabled = false
         sender.setTitle("In the cart", for: .disabled)
+        Timer.scheduledTimer(withTimeInterval: 0.7, repeats: false) { (timer) in
+            self.dismiss(animated: true, completion: nil)
+        }
     }
     
 }

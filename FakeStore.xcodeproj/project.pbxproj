@@ -165,6 +165,13 @@
 			path = Core;
 			sourceTree = "<group>";
 		};
+		7F713D6928433E4100F0BD94 /* Coordinator */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Coordinator;
+			sourceTree = "<group>";
+		};
 		7F949E702833AA29003E81DF = {
 			isa = PBXGroup;
 			children = (
@@ -186,6 +193,7 @@
 		7F949E7B2833AA29003E81DF /* FakeStore */ = {
 			isa = PBXGroup;
 			children = (
+				7F713D6928433E4100F0BD94 /* Coordinator */,
 				7F949EBA28340DCC003E81DF /* Managers */,
 				7F949E9B2833AA7B003E81DF /* Services */,
 				7F949E9A2833AA7B003E81DF /* Models */,
